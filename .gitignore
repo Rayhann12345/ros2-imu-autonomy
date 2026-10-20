@@ -1,0 +1,15 @@
+# Python temporary files
+__pycache__/
+*.pyc
+*.pyo
+
+# ROS 2 generated directories
+build/
+install/
+log/
+
+# Python testing
+.pytest_cache/
+
+# VS Code local settings
+.vscode/
