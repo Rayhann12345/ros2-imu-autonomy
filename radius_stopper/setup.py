@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'radius_stopper = radius_stopper.radius_stopper:main',
         ],
     },
 )
