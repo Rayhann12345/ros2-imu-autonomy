@@ -1,0 +1,9 @@
+# IMU-Based Stopping: Short Evaluation
+
+### 1. How close to 10 m did the robot actually stop?
+
+The TurtleBot3 stopped automatically when its **IMU-estimated radial distance** crossed the 10 m threshold. Across three trials, the estimated radii at the stopping instant were **10.072 m, 10.065 m and 10.082 m**. For comparison, wheel odometry measured respective displacements of **4.617 m, 4.658 m and 4.638 m** from the starting position. Thus, the mean odometry-based stopping distance was **4.638 m**, approximately **5.362 m short** of the intended 10 m radius (a **53.62% shortfall**). Odometry was used only to evaluate the result; the stopping decision itself used IMU measurements exclusively. Odometry is also an estimate, rather than exact simulator ground truth.
+
+### 2. Why is there an error?
+
+An IMU measures acceleration, not position. Our program estimates velocity by integrating horizontal acceleration, then integrates velocity to estimate displacement. Consequently, small acceleration errors accumulate at both stages. Even with the robot stationary, we observed a persistent x-axis reading of approximately **−0.06 m/s²**, while the integrated x-velocity drifted increasingly negative. A roughly constant acceleration offset contributes a position error proportional to **½at²**, so the discrepancy grows rapidly over time. These results suggest that a systematic acceleration offset is an important contributor; possible sources include sensor bias and gravity projected onto a slightly tilted IMU axis. Random noise and imperfect capture of initial acceleration may contribute too, but their individual effects were not isolated. Therefore, the estimator reached 10 m much earlier than the robot reached 10 m according to odometry.
