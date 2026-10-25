@@ -3,13 +3,19 @@
 <package format="3">
   <name>radius_stopper</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="rayhann@todo.todo">rayhann</maintainer>
-  <license>TODO: License declaration</license>
-
+  <description>ROS 2 node for autonomous robot stopping using IMU-based position estimation.</description>
+  <maintainer email="rehansharief258@gmail.com">Rayhann12345</maintainer>
+  <license>All rights reserved</license>
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

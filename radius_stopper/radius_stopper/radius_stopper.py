@@ -4,6 +4,8 @@ from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Twist
 from rclpy.qos import qos_profile_sensor_data
 import math
+from nav_msgs.msg import Odometry
+from std_msgs.msg import Float64
 
 
 class RadiusStopper(Node):
@@ -23,6 +25,25 @@ class RadiusStopper(Node):
             10
         )
 
+        self.odom_sub = self.create_subscription(
+            Odometry, 
+            '/odom', 
+            self.odom_callback, 
+            10
+        )
+
+        self.imu_radius_pub = self.create_publisher(
+            Float64, 
+            '/imu_radius', 
+            10
+        )
+
+        self.odom_radius_pub = self.create_publisher(
+            Float64, 
+            '/odom_radius', 
+            10
+        )
+
         self.timer = self.create_timer(
             0.1,
             self.control_loop
@@ -33,6 +54,10 @@ class RadiusStopper(Node):
 
         self.x = 0.0
         self.y = 0.0
+
+        self.odom_x0 = None
+        self.odom_y0 = None
+        self.odom_radius = None
 
         self.last_time = None
 
@@ -70,9 +95,31 @@ class RadiusStopper(Node):
         self.vx += ax * dt
         self.vy += ay * dt
 
+    def odom_callback(self, msg):
+        x = msg.pose.pose.position.x
+        y = msg.pose.pose.position.y
+
+        if self.odom_x0 is None:
+            self.odom_x0 = x
+            self.odom_y0 = y
+
+        self.odom_radius = math.hypot(
+            x - self.odom_x0,
+            y - self.odom_y0
+        )
+
     def control_loop(self):
 
         r = math.hypot(self.x, self.y)
+
+        imu_msg = Float64()
+        imu_msg.data = r
+        self.imu_radius_pub.publish(imu_msg)
+
+        if self.odom_radius is not None:
+            odom_msg = Float64()
+            odom_msg.data = self.odom_radius
+            self.odom_radius_pub.publish(odom_msg)
 
         if not self.stopped and r >= self.stop_radius:
             self.stopped = True

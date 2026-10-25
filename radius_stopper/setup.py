@@ -1,4 +1,6 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
 
 package_name = 'radius_stopper'
 
@@ -10,13 +12,14 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='rayhann',
-    maintainer_email='rayhann@todo.todo',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    maintainer='Rayhann12345',
+    maintainer_email='rehansharief258@gmail.com',
+    description='ROS 2 node for autonomous robot stopping using IMU-based position estimation',
+    license='All rights reserved',
     extras_require={
         'test': [
             'pytest',
